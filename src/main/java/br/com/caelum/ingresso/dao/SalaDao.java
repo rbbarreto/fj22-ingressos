@@ -1,11 +1,18 @@
 package br.com.caelum.ingresso.dao;
 
-import br.com.caelum.ingresso.model.Sala;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
+
+import br.com.caelum.ingresso.model.Sala;
+import br.com.caelum.ingresso.model.Sessao;
+import br.com.caelum.ingresso.model.form.SessaoForm;
 
 /**
  * Created by nando on 03/03/17.
@@ -32,4 +39,20 @@ public class SalaDao {
     public void delete(Integer id) {
         manager.remove(findOne(id));
     }
+    
+    @Controller
+    public class SessaoController{
+    	
+    	@Autowired
+    	private SalaDao salaDao;
+    	
+    	@Autowired
+    	private FilmeDao filmeDao;
+    	
+    	@Autowired
+    	private SessaoDao sessaoDao;
+	
+    	
+    }
+    
 }
