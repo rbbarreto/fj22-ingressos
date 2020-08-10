@@ -38,12 +38,15 @@ public class GerenciadorDeSessao {
 	}
 
 	private boolean horarioIsConflitante(Sessao sessaoExistente, Sessao sessaoNova) {
+
 		LocalDateTime inicioSessaoExistente = getInicioSessaoComDiaDeHoje(sessaoExistente);
 		LocalDateTime terminoSessaoExistente = getTerminoSessaoComDiaDeHoje(sessaoExistente);
 		LocalDateTime inicioSessaoNova = getInicioSessaoComDiaDeHoje(sessaoNova);
 		LocalDateTime terminoSessaoNova = getTerminoSessaoComDiaDeHoje(sessaoNova);
+
 		boolean sessaoNovaTerminaAntesDaExistente = terminoSessaoNova.isBefore(inicioSessaoExistente);
 		boolean sessaoNovaComecaDepoisDaExistente = terminoSessaoExistente.isBefore(inicioSessaoNova);
+
 		if (sessaoNovaTerminaAntesDaExistente || sessaoNovaComecaDepoisDaExistente) {
 			return false;
 		}
@@ -57,6 +60,7 @@ public class GerenciadorDeSessao {
 
 	private LocalDateTime getTerminoSessaoComDiaDeHoje(Sessao sessao) {
 		LocalDateTime inicioSessaoNova = getInicioSessaoComDiaDeHoje(sessao);
+		
 		return inicioSessaoNova.plus(sessao.getFilme().getDuracao());
 	}
 }

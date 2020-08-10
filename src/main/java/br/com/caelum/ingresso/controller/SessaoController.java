@@ -54,14 +54,14 @@ public class SessaoController {
 		
 		List<Sessao> sessoesDaSala = SessaoDao.buscaSessoesDaSala(sessao.getSala());
 		
-		GerenciadorDeSessao Gerenciador = new GerenciadorDeSessao(sessoesDaSala);
+		GerenciadorDeSessao gerenciador = new GerenciadorDeSessao(sessoesDaSala);
 		
-		if(Gerenciador.cabe(sessao)) {
+		if(gerenciador.cabe(sessao)) {
 			SessaoDao.save(sessao);
 			return new ModelAndView("redirect:/admin/sala/" + form.getSalaId() + "/sessoes");
 		}
 
-    return form(form.getFilmeId(), form);
+    return form(form.getSalaId(), form);
 	
 	}
 
