@@ -1,5 +1,6 @@
 package br.com.br.ingresso.validation;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -26,8 +27,8 @@ public class GerenciadorDeSessaoTest {
 	@Before
 	public void preparaSessoes() {
 
-		this.rogueOne = new Filme("Rogue One", Duration.ofMinutes(120), "SCI-FI");
-		this.sala3D = new Sala("Sala3D");
+		this.rogueOne = new Filme("Rogue One", Duration.ofMinutes(120), "SCI-FI", BigDecimal.ZERO);
+		this.sala3D = new Sala("Sala3D", BigDecimal.ZERO);
 
 		this.sessaoDasDez = new Sessao(LocalTime.parse("10:00:00"), sala3D, rogueOne);
 		this.sessaoDasTreze = new Sessao(LocalTime.parse("13:00:00"), sala3D, rogueOne);
@@ -40,10 +41,10 @@ public class GerenciadorDeSessaoTest {
 		List<Sessao> sessoes = Collections.emptyList();
 		GerenciadorDeSessao gerenciador = new GerenciadorDeSessao(sessoes);
 
-		Filme filme = new Filme("Rogue One", Duration.ofMinutes(120), "SCI-FI");
+		Filme filme = new Filme("Rogue One", Duration.ofMinutes(120), "SCI-FI", BigDecimal.ZERO);
 		filme.setDuracao(120);
 		LocalTime horario = LocalTime.parse("10:00:00");
-		Sala sala = new Sala("");
+		Sala sala = new Sala("", BigDecimal.ZERO);
 
 		Sessao sessao = new Sessao(horario, sala, filme);
 
@@ -71,7 +72,7 @@ public class GerenciadorDeSessaoTest {
 	public void garanteQueNaoDevePermitirSessoesIniciandoDentroDoHorarioDeUmaSessaoJaExistente() {
 		List<Sessao> sessoesDaSala = Arrays.asList(sessaoDasDez);
 		GerenciadorDeSessao gerenciador = new GerenciadorDeSessao(sessoesDaSala);
-		Sessao sessao = new Sessao( sessaoDasDez.getHorario().plusHours(1), sala3D, rogueOne );
+		Sessao sessao = new Sessao(sessaoDasDez.getHorario().plusHours(1), sala3D, rogueOne);
 		Assert.assertFalse(gerenciador.cabe(sessao));
 	}
 
@@ -86,9 +87,19 @@ public class GerenciadorDeSessaoTest {
 	public void garanteQueDeveNaoPermitirUmaSessaoQueTerminaNoProximoDia() {
 		List<Sessao> sessoes = Collections.emptyList();
 		GerenciadorDeSessao gerenciador = new GerenciadorDeSessao(sessoes);
-		Sessao sessaoQueTerminaAmanha = new Sessao(LocalTime.parse("23:00:00"), sala3D, rogueOne );
-		
+		Sessao sessaoQueTerminaAmanha = new Sessao(LocalTime.parse("23:00:00"), sala3D, rogueOne);
+
 		Assert.assertFalse(gerenciador.cabe(sessaoQueTerminaAmanha));
+	}
+
+	@Test
+	public void oPrecoDaSessaoDeveSerIgualASomaDoSalaMaisDoFilme() {
+
+		Sala sala = new Sala("Eldorado	-	IMax", new BigDecimal("22.5"));
+		Filme filme = new Filme("Rogue	One", Duration.ofMinutes(120), "SCI-FI", new BigDecimal("12.0"));
+		BigDecimal somaDosPrecosDaSalaEFilme = sala.getPreco().add(filme.getPreco());
+		Sessao sessao = new Sessao(LocalTime.parse("10:00:00"), sala, filme);
+		Assert.assertEquals(somaDosPrecosDaSalaEFilme, sessao.getPreco());
 	}
 
 }
